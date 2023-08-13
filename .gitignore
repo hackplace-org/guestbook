@@ -1,4 +1,6 @@
 node_modules/
 \*.tsbuildinfo
 uno.css
+sqlite.db
+migrations/
 .env

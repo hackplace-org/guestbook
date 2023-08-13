@@ -14,8 +14,8 @@ export const signatures = sqliteTable("signatures", {
 });
 
 export const insertSignatureSchema = createInsertSchema(signatures, {
-	author: z.string().min(1).max(64),
-	message: z.string().min(1).max(255),
+	author: z.string().min(1).max(50),
+	message: z.string().min(1).max(200),
 });
 
 export type NewSignature = InferModel<typeof signatures, "insert">;
