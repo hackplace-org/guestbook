@@ -29,10 +29,17 @@ app.get("/signatures", (c) => {
 	const signatures = getSignatures();
 
 	return c.html(
-		<div>
+		<div class="flex flex-col gap-4 max-h-full overflow-y-scroll">
 			{signatures.map((signature) => (
-				<div>
-					{signature.author} @ {signature.time}: {signature.message}
+				<div class="rounded-lg border border-white/10 p-4">
+					<p>
+						<span class="font-bold">{signature.author}</span>
+						<span class="text-neutral">
+							{signature.time?.toLocaleDateString()}{" "}
+							{signature.time?.toLocaleTimeString()}
+						</span>
+					</p>
+					<p>{signature.message}</p>
 				</div>
 			))}
 		</div>
