@@ -1,28 +1,28 @@
 {
-  "name": "guestbook",
-  "license": "MIT",
-  "module": "src/index.tsx",
-  "type": "module",
-  "scripts": {
-    "uno": "unocss src/**/*.tsx --preflights --minify --out-file static/uno.css",
-    "dev": "concurrently 'bun run uno -- --watch' 'bun run --hot src/index.tsx'",
-    "generate": "drizzle-kit generate:sqlite --config drizzle.config.ts"
-  },
-  "devDependencies": {
-    "@types/better-sqlite3": "^7.6.4",
-    "bun-types": "latest",
-    "concurrently": "^8.2.0",
-    "drizzle-kit": "^0.19.12",
-    "unocss": "^0.55.0"
-  },
-  "peerDependencies": {
-    "typescript": "^5.0.0"
-  },
-  "dependencies": {
-    "@kitajs/html": "^2.1.2",
-    "@libsql/client": "^0.3.1",
-    "drizzle-orm": "^0.28.2",
-    "drizzle-zod": "^0.5.0",
-    "hono": "^3.4.1"
-  }
+	"name": "guestbook",
+	"license": "MIT",
+	"module": "src/index.tsx",
+	"type": "module",
+	"scripts": {
+		"uno": "unocss src/**/*.tsx --preflights --minify --out-file static/uno.css",
+		"dev": "concurrently 'bun run uno -- --watch' 'bun run --hot src/index.tsx'",
+		"generate": "drizzle-kit generate:sqlite --config drizzle.config.ts"
+	},
+	"devDependencies": {
+		"@types/better-sqlite3": "^7.6.4",
+		"bun-types": "latest",
+		"concurrently": "^8.2.0",
+		"drizzle-kit": "^0.19.12",
+		"unocss": "^0.55.0"
+	},
+	"peerDependencies": {
+		"typescript": "^5.0.0"
+	},
+	"dependencies": {
+		"@kitajs/html": "^2.1.2",
+		"@libsql/client": "^0.3.1",
+		"drizzle-orm": "^0.28.2",
+		"drizzle-zod": "^0.5.0",
+		"hono": "^3.4.1"
+	}
 }

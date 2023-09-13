@@ -1,4 +1,4 @@
-import { sql, type InferModel } from "drizzle-orm";
+import { sql, type InferInsertModel } from "drizzle-orm";
 import { sqliteTable, integer, text } from "drizzle-orm/sqlite-core";
 
 import { z } from "zod";
@@ -18,4 +18,4 @@ export const insertSignatureSchema = createInsertSchema(signatures, {
 	message: z.string().min(1).max(200),
 });
 
-export type NewSignature = InferModel<typeof signatures, "insert">;
+export type NewSignature = InferInsertModel<typeof signatures>;
