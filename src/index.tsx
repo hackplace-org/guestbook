@@ -2,7 +2,7 @@ import { Hono } from "hono";
 import { serveStatic } from "hono/bun";
 
 import html from "@kitajs/html";
-import "@kitajs/html/htmx"
+import "@kitajs/html/htmx";
 
 import { createSignature, getSignatures } from "./db/client";
 import { insertSignatureSchema } from "./db/schema";
@@ -29,20 +29,22 @@ app.get("/signatures", (c) => {
 	const signatures = getSignatures();
 
 	return c.html(
-		<div class="flex flex-col gap-4 max-h-full overflow-y-scroll">
-			{signatures.map((signature) => (
-				<div class="rounded-lg border border-white/10 p-4">
-					<p>
-						<span class="font-bold">{signature.author}</span>
-						<span class="text-neutral">
-							{signature.time?.toLocaleDateString()}{" "}
-							{signature.time?.toLocaleTimeString()}
-						</span>
-					</p>
-					<p>{signature.message}</p>
-				</div>
-			))}
-		</div>
+		(
+			<div class="flex flex-col gap-4 max-h-full overflow-y-scroll">
+				{signatures.map((signature) => (
+					<div class="rounded-lg border border-white/10 p-4">
+						<p>
+							<span class="font-bold">{signature.author}</span>
+							<span class="text-neutral">
+								{signature.time?.toLocaleDateString()}{" "}
+								{signature.time?.toLocaleTimeString()}
+							</span>
+						</p>
+						<p>{signature.message}</p>
+					</div>
+				))}
+			</div>
+		) as string
 	);
 });
 
@@ -58,98 +60,104 @@ app.post("/sign", async (c) => {
 			createSignature(result);
 
 			return c.html(
-				<div
-					class="rounded-lg bg-[#04aa6d] w-full"
-					hx-get="/empty"
-					hx-trigger="load delay:5s"
-					hx-swap="outerHTML"
-				>
-					<div class="rounded-t-lg h-2 w-full bg-[#03784b]"></div>
-					<p class="p-4">Signature added successfully.</p>
-				</div>
+				(
+					<div
+						class="rounded-lg bg-[#04aa6d] w-full"
+						hx-get="/empty"
+						hx-trigger="load delay:5s"
+						hx-swap="outerHTML"
+					>
+						<div class="rounded-t-lg h-2 w-full bg-[#03784b]"></div>
+						<p class="p-4">Signature added successfully.</p>
+					</div>
+				) as string
 			);
 		})
 		.catch((error) => {
 			console.error(error);
 
 			return c.html(
-				<div
-					class="rounded-lg bg-[#e63757] w-full"
-					hx-get="/empty"
-					hx-trigger="load delay:5s"
-					hx-swap="outerHTML"
-				>
-					<div class="rounded-t-lg h-2 w-full bg-[#aa0000]"></div>
-					<p class="p-4">An error occured.</p>
-				</div>
+				(
+					<div
+						class="rounded-lg bg-[#e63757] w-full"
+						hx-get="/empty"
+						hx-trigger="load delay:5s"
+						hx-swap="outerHTML"
+					>
+						<div class="rounded-t-lg h-2 w-full bg-[#aa0000]"></div>
+						<p class="p-4">An error occured.</p>
+					</div>
+				) as string
 			);
 		});
 });
 
 app.get("/", (c) =>
 	c.html(
-		<Root>
-			<body class="flex flex-row relative h-screen bg-[#0c0a09] text-light">
-				<div class="w-1/2 p-8 flex flex-col gap-6 border border-r-dashed border-white/10">
-					<h1 class="text-6xl font-bold">Guestbook</h1>
+		(
+			<Root>
+				<body class="flex flex-row relative h-screen bg-[#0c0a09] text-light">
+					<div class="w-1/2 p-8 flex flex-col gap-6 border border-r-dashed border-white/10">
+						<h1 class="text-6xl font-bold">Guestbook</h1>
+
+						<div
+							hx-get="/signatures"
+							hx-trigger="load"
+							hx-swap="innerHTML"
+						></div>
+					</div>
+
+					<div class="w-1/2 p-8 flex flex-col gap-6">
+						<h1 class="text-6xl font-thin">Sign here</h1>
+
+						<form
+							class="flex flex-col gap-2"
+							hx-post="/sign"
+							hx-target="#toast"
+							hx-swap="innerHTML"
+						>
+							<div class="flex flex-col gap-1">
+								<label for="author">Name</label>
+								<input
+									id="author"
+									name="author"
+									type="text"
+									placeholder="Your name"
+									maxlength="50"
+									required="true"
+									class="px-4 py-2 bg-dark rounded-lg border border-white/10"
+								></input>
+							</div>
+
+							<div class="flex flex-col gap-1">
+								<label for="message">Message</label>
+								<input
+									id="message"
+									name="message"
+									type="text"
+									placeholder="Your message"
+									maxlength="200"
+									required="true"
+									class="px-4 py-2 bg-dark rounded-lg border border-white/10"
+								></input>
+							</div>
+
+							<button
+								type="submit"
+								class="w-24 mt-2 py-2 rounded-lg bg-[#e11d48]"
+							>
+								Sign
+							</button>
+						</form>
+					</div>
 
 					<div
-						hx-get="/signatures"
-						hx-trigger="load"
-						hx-swap="innerHTML"
+						id="toast"
+						class="absolute flex items-end w-64 h-24 bottom-8 right-8"
 					></div>
-				</div>
-
-				<div class="w-1/2 p-8 flex flex-col gap-6">
-					<h1 class="text-6xl font-thin">Sign here</h1>
-
-					<form
-						class="flex flex-col gap-2"
-						hx-post="/sign"
-						hx-target="#toast"
-						hx-swap="innerHTML"
-					>
-						<div class="flex flex-col gap-1">
-							<label for="author">Name</label>
-							<input
-								id="author"
-								name="author"
-								type="text"
-								placeholder="Your name"
-								maxlength="50"
-								required="true"
-								class="px-4 py-2 bg-dark rounded-lg border border-white/10"
-							></input>
-						</div>
-
-						<div class="flex flex-col gap-1">
-							<label for="message">Message</label>
-							<input
-								id="message"
-								name="message"
-								type="text"
-								placeholder="Your message"
-								maxlength="200"
-								required="true"
-								class="px-4 py-2 bg-dark rounded-lg border border-white/10"
-							></input>
-						</div>
-
-						<button
-							type="submit"
-							class="w-24 mt-2 py-2 rounded-lg bg-[#e11d48]"
-						>
-							Sign
-						</button>
-					</form>
-				</div>
-
-				<div
-					id="toast"
-					class="absolute flex items-end w-64 h-24 bottom-8 right-8"
-				></div>
-			</body>
-		</Root>
+				</body>
+			</Root>
+		) as string
 	)
 );
 
